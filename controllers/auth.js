@@ -1,14 +1,18 @@
 const { ObjectId } = require("mongodb");
 const connectDB = require("../utility/helper");
+const { hashPassword } = require("../utility/helper");
 
 const registerUser = async(req, res) => {
-    console.log(req.body);
+    const { firstName, lastName, email, password } = req.body;
 
-    const db = await connectDB();
+    const hashedPassword = await hashPassword(password);
 
-    const user = await db.collection("users").insertOne(req.body);
+    console.log(firstName, email, password, hashedPassword);
+    /*const db = await connectDB();
 
-    res.send("Registerd the User");
+                const user = await db.collection("users").insertOne(req.body);*/
+
+    res.status(200).json({ msg: "Registerd the User", password: hashedPassword });
 };
 
 module.exports = { registerUser };
