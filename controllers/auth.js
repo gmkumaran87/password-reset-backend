@@ -17,9 +17,17 @@ const registerUser = async(req, res) => {
 
     // DB Connection and insertion
     const db = await connectDB();
-    const user = await db.collection("users").insertOne(userObj);
 
-    res.status(200).json({ msg: "Registered the User", user });
+    // Finding the User present in the DB
+    const userExists = await db.collection("users").findOne({ email: email });
+
+    // If the User doesn't exists in the DB
+    if (!userExists) {
+        const user = await db.collection("users").insertOne(userObj);
+        res.status(200).json({ msg: "Registered the User", user });
+    }
+
+    res.status(400).json({ msg: "Email provided is already registered" });
 };
 
 const forgotPassword = async(req, res) => {
