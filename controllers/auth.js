@@ -5,6 +5,8 @@ const {
     randomStringGenerator,
 } = require("../utility/helper");
 
+const { sendGridMail, sendEmail } = require("../utility/sendMail");
+
 const registerUser = async(req, res) => {
     const { firstName, lastName, email, password } = req.body;
 
@@ -21,13 +23,9 @@ const registerUser = async(req, res) => {
 };
 
 const forgotPassword = async(req, res) => {
-    console.log("Email", req.body);
-
     // DB Connection and insertion
     const db = await connectDB();
     const userExists = await db.collection("users").findOne(req.body);
-
-    console.log("User exists", userExists);
 
     if (userExists) {
         // Ge
@@ -38,13 +36,32 @@ const forgotPassword = async(req, res) => {
             .collection("users")
             .updateOne({ _id: userId }, { $set: { randomStr: randomString } });
 
+        const resetLink = `${process.env.BASE_URL}?userId=${userId}&randomStr=${randomString}`;
+        // Sending email
+        const mailInfo = sendGridMail(req.body.email, resetLink);
+
         res.status(200).json({
-            msg: "User exists",
-            randomStr: `${process.env.BASE_URL}?userId=${userId}&str=${randomString}`,
+            msg: "Mail sent to the User",
+            mailInfo,
         });
     } else {
         res.status(404).send("User does not exists");
     }
 };
 
-module.exports = { registerUser, forgotPassword };
+const resetPassword = async(req, res) => {
+    const { userId, randomStr } = req.query;
+
+    console.log(userId, randomStr);
+
+    const db = await connectDB();
+    const userExists = await db
+        .collection("users")
+        .findOne({ _id: ObjectId(userId), randomStr: randomStr });
+
+    console.log(userExists);
+
+    res.status(200).json({ msg: "Validation received", userExists });
+};
+
+module.exports = { registerUser, forgotPassword, resetPassword };
