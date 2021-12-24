@@ -1,6 +1,11 @@
 const express = require("express");
 require("dotenv").config();
 
+// Security Libraries
+const cors = require("cors");
+const helmet = require("helmet");
+const xss = require("xss-clean");
+
 const app = express();
 app.use(express.json());
 
