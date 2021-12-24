@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
-const conndbConnectionectDb = require("../db/connect");
+const dbConnection = require("../db/connect");
+const { randomBytes } = require("crypto");
 
 const connectDB = async() => {
     const client = dbConnection();
@@ -11,4 +12,7 @@ const hashPassword = async(password) => {
     const salt = await bcrypt.genSalt(10);
     return await bcrypt.hash(password, salt);
 };
-module.exports = { connectDB, hashPassword };
+
+const randomStringGenerator = () => randomBytes(20).toString("hex");
+
+module.exports = { connectDB, hashPassword, randomStringGenerator };
