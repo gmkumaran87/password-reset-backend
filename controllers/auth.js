@@ -61,7 +61,7 @@ const forgotPassword = async(req, res) => {
 };
 
 const resetPassword = async(req, res) => {
-    const { userId, randomStr } = req.query;
+    const { userId, randomStr } = req.params;
 
     console.log(userId, randomStr);
 
