@@ -63,16 +63,16 @@ const forgotPassword = async(req, res) => {
 const resetPassword = async(req, res) => {
     const { userId, randomStr } = req.params;
 
-    console.log(userId, randomStr);
-
     const db = await connectDB();
     const userExists = await db
         .collection("users")
         .findOne({ _id: ObjectId(userId), randomStr: randomStr });
 
-    console.log(userExists);
-
-    res.status(200).json({ msg: "Validation received", userExists });
+    if (userExists) {
+        res.status(200).json({ msg: "Validation received", userExists });
+    } else {
+        res.status(404).json({ msg: "Password reset link is not valid" });
+    }
 };
 
 module.exports = { registerUser, forgotPassword, resetPassword };
