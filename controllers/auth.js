@@ -27,7 +27,11 @@ const registerUser = async(req, res) => {
         res.status(200).json({ msg: "Registered the User", user });
     }
 
-    res.status(400).json({ msg: "Email provided is already registered" });
+    res
+        .status(400)
+        .json({
+            msg: "Email provided is already registered, please login or try with another account",
+        });
 };
 
 const forgotPassword = async(req, res) => {
