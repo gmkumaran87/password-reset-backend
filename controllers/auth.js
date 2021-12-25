@@ -51,15 +51,13 @@ const forgotPassword = async(req, res) => {
         const mailInfo = sendGridMail(req.body.email, resetLink);
 
         res.status(200).json({
-            msg: "Mail sent to the User",
+            msg: "Please check your email for the Password reset Link",
             mailInfo,
         });
     } else {
-        res
-            .status(404)
-            .json({
-                msg: "User account does not exists, please enter valid email id",
-            });
+        res.status(404).json({
+            msg: "User account does not exists, please enter valid email id",
+        });
     }
 };
 
