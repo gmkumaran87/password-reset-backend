@@ -81,7 +81,6 @@ const emailValidation = async(req, res) => {
 const updatePassword = async(req, res) => {
     const { confirmPassword, userId, randomStr } = req.body;
 
-    console.log(confirmPassword, userId, randomStr);
     // Hashing the Password
     const hashedPassword = await hashPassword(confirmPassword);
 
