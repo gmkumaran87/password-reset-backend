@@ -60,7 +60,7 @@ const forgotPassword = async(req, res) => {
     }
 };
 
-const resetPassword = async(req, res) => {
+const emailValidation = async(req, res) => {
     const { userId, randomStr } = req.params;
 
     const db = await connectDB();
@@ -69,10 +69,40 @@ const resetPassword = async(req, res) => {
         .findOne({ _id: ObjectId(userId), randomStr: randomStr });
 
     if (userExists) {
-        res.status(200).json({ msg: "Validation received", userExists });
+        res.status(200).json({
+            msg: "Password Reset link validation is successfull",
+            userExists,
+        });
     } else {
         res.status(404).json({ msg: "Password reset link is not valid" });
     }
 };
 
-module.exports = { registerUser, forgotPassword, resetPassword };
+const updatePassword = async(req, res) => {
+    const { confirmPassword, userId, randomStr } = req.body;
+
+    console.log(confirmPassword, userId, randomStr);
+    // Hashing the Password
+    const hashedPassword = await hashPassword(confirmPassword);
+
+    const db = await connectDB();
+    const userExists = await db
+        .collection("users")
+        .findOne({ _id: ObjectId(userId), randomStr: randomStr });
+
+    if (userExists) {
+        const updatedUser = await db
+            .collection("users")
+            .updateOne({ _id: ObjectId(userId) }, { $set: { password: hashedPassword, randomStr: "" } });
+
+        res.status(200).json({ msg: "Password updated successfully", updatedUser });
+    } else {
+        res.status(404).json({ msg: "Something went wrong, please try again" });
+    }
+};
+module.exports = {
+    registerUser,
+    forgotPassword,
+    updatePassword,
+    emailValidation,
+};
