@@ -55,7 +55,11 @@ const forgotPassword = async(req, res) => {
             mailInfo,
         });
     } else {
-        res.status(404).json({ msg: "User account does not exists" });
+        res
+            .status(404)
+            .json({
+                msg: "User account does not exists, please enter valid email id",
+            });
     }
 };
 
