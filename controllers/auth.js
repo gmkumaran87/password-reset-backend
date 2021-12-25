@@ -27,11 +27,9 @@ const registerUser = async(req, res) => {
         res.status(200).json({ msg: "Registered the User", user });
     }
 
-    res
-        .status(400)
-        .json({
-            msg: "Email provided is already registered, please login or try with another account",
-        });
+    res.status(400).json({
+        msg: "Email provided is already registered, please login or try with another account",
+    });
 };
 
 const forgotPassword = async(req, res) => {
@@ -57,7 +55,7 @@ const forgotPassword = async(req, res) => {
             mailInfo,
         });
     } else {
-        res.status(404).send("User does not exists");
+        res.status(404).json({ msg: "User account does not exists" });
     }
 };
 
