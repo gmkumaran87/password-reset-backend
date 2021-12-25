@@ -46,7 +46,7 @@ const forgotPassword = async(req, res) => {
             .collection("users")
             .updateOne({ _id: userId }, { $set: { randomStr: randomString } });
 
-        const resetLink = `${process.env.BASE_URL}?userId=${userId}&randomStr=${randomString}`;
+        const resetLink = `${process.env.BASE_URL}/${userId}/${randomString}`;
         // Sending email
         const mailInfo = sendGridMail(req.body.email, resetLink);
 
