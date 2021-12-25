@@ -52,7 +52,6 @@ const forgotPassword = async(req, res) => {
 
         res.status(200).json({
             msg: "Please check your email for the Password reset Link",
-            mailInfo,
         });
     } else {
         res.status(404).json({
